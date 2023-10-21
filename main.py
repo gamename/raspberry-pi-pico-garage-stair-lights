@@ -65,4 +65,4 @@ while True:
         print("MAIN: Turning OFF strip")
         set_color(pixels, OFF)
 
-    time.sleep(1)  # Adjust the sleep duration as needed for responsiveness
+    time.sleep(0.01)  # Adjust the sleep duration as needed for responsiveness
