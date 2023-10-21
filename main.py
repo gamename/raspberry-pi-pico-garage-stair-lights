@@ -1,10 +1,11 @@
-'''
+"""
 This is an example of how to light a strip of ws2812b pixels with the Raspberry Pi Pico using
 a motion detector and a light sensor.
-'''
+"""
 import time
+
+from machine import Pin
 from neopixel import NeoPixel
-from machine import Pin, ADC
 
 # How many pixels do we have?
 PIXEL_COUNT = 65
@@ -18,7 +19,7 @@ PIXEL_PIN = Pin(0)
 # Which pin controls the motion detector?
 MOTION_DETECTION_PIN = 1
 
-# Which pin is connected to the light sensor (analog pin)?
+# Which pin is connected to the light sensor?
 LIGHT_SENSOR_PIN = 22
 
 # Define the color we want to use for the light strip
@@ -32,7 +33,7 @@ SHINE_TIME = 60 * LIGHT_MINUTES
 
 
 def set_color(strip, color):
-    '''
+    """
     Set the color of the pixel strip
     Args:
         strip (): The pixel strip name
@@ -40,7 +41,7 @@ def set_color(strip, color):
 
     Returns:
         Nothing
-    '''
+    """
     strip.fill(color)
     strip.write()
 
@@ -52,9 +53,16 @@ light_sensor = Pin(LIGHT_SENSOR_PIN, Pin.IN, Pin.PULL_DOWN)
 set_color(pixels, OFF)
 
 while True:
-    if motion.value() and light_sensor.value():
+    is_movement = bool(motion.value())
+    is_dark = bool(light_sensor.value())
+
+    print(f"MAIN: movement: {is_movement} darkness: {is_dark}")
+
+    if is_movement and is_dark:
+        print("MAIN: Turning ON strip")
         set_color(pixels, WHITE)
         time.sleep(SHINE_TIME)
+        print("MAIN: Turning OFF strip")
         set_color(pixels, OFF)
 
     time.sleep(1)  # Adjust the sleep duration as needed for responsiveness
